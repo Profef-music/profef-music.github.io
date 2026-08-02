@@ -1,0 +1,26 @@
+{
+  "name": "PROFEF — Every Song Tells a Story",
+  "short_name": "PROFEF",
+  "description": "Músicas originais criadas com IA. Cada música conta uma história.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f0f10",
+  "theme_color": "#0f0f10",
+  "orientation": "any",
+  "lang": "pt",
+  "categories": ["music", "entertainment"],
+  "icons": [
+    {
+      "src": "assets/covers/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/covers/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

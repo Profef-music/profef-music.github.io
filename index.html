@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="pt" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="PROFEF — Músicas originais criadas com IA. Cada música conta uma história.">
+  <meta name="theme-color" content="#0f0f10">
+  <title>PROFEF — Every Song Tells a Story</title>
+
+  <!-- Open Graph / Social Media -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="PROFEF — Every Song Tells a Story">
+  <meta property="og:description" content="Original music created with AI. Every song tells a different story.">
+  <meta property="og:image" content="assets/covers/logo.png">
+  <meta property="og:locale" content="pt_PT">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="PROFEF — Every Song Tells a Story">
+  <meta name="twitter:description" content="Original music created with AI. Every song tells a different story.">
+  <meta name="twitter:image" content="assets/covers/logo.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Favicon -->
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/covers/logo.png" type="image/png" sizes="192x192">
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/covers/logo.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="PROFEF">
+  <link rel="sitemap" type="application/xml" href="sitemap.xml">
+
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       LOADING SCREEN
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loading-logo">PROFEF</div>
+    <div class="loading-bar-track">
+      <div class="loading-bar-fill" id="loadingBar"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       NAVIGATION
+       ═══════════════════════════════════════════════════════════ -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-brand" onclick="navigateTo('home')">
+      <img src="assets/covers/logo.png" alt="PROFEF" class="nav-brand-logo" onerror="this.style.display='none';">
+      <span class="nav-brand-text" style="display:none;">PROFEF</span>
+    </div>
+
+    <div class="nav-links" id="navLinks">
+      <a class="nav-link active" data-page="home" onclick="navigateTo('home')" data-tooltip="Página inicial" data-i18n="nav_home">Home</a>
+      <a class="nav-link" data-page="songs" onclick="navigateTo('songs')" data-tooltip="Ver todas as músicas" data-i18n="nav_songs">Músicas</a>
+      <a class="nav-link" data-page="about" onclick="navigateTo('about')" data-tooltip="Sobre o projeto PROFEF" data-i18n="nav_about">Sobre</a>
+      <a class="nav-link" data-page="ranking" onclick="navigateTo('ranking')" data-tooltip="Ranking das mais votadas" data-i18n="nav_ranking">Ranking</a>
+      <a class="nav-link" data-page="styles" onclick="navigateTo('styles')" data-tooltip="Músicas por género" data-i18n="nav_styles">Estilos</a>
+      <a class="nav-link" data-page="requests" onclick="navigateTo('requests')" data-tooltip="Pedir uma música" data-i18n="nav_requests">Pedidos</a>
+      <a class="nav-link" data-page="statistics" onclick="navigateTo('statistics')" data-tooltip="Estatísticas do site" data-i18n="nav_statistics">Estatísticas</a>
+    </div>
+
+    <div class="nav-actions">
+      <div class="lang-toggle" id="langToggle">
+        <button class="lang-btn active" data-lang="pt" onclick="setLanguage('pt')" data-tooltip="Português">PT</button>
+        <button class="lang-btn" data-lang="en" onclick="setLanguage('en')" data-tooltip="English">EN</button>
+        <button class="lang-btn" data-lang="es" onclick="setLanguage('es')" data-tooltip="Español">ES</button>
+        <button class="lang-btn" data-lang="fr" onclick="setLanguage('fr')" data-tooltip="Français">FR</button>
+        <button class="lang-btn" data-lang="it" onclick="setLanguage('it')" data-tooltip="Italiano">IT</button>
+      </div>
+      <button class="nav-search-btn" onclick="toggleSearch()" aria-label="Pesquisar" data-tooltip="Pesquisar (Ctrl+K)">🔍</button>
+      <button class="nav-theme-btn" onclick="toggleTheme()" aria-label="Temas" data-tooltip="Modo Escuro/Claro">🌙</button>
+      <div class="subscriber-nav" id="subscriberNav"></div>
+      <button class="nav-hamburger" id="hamburgerBtn" onclick="toggleMobileMenu()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a class="nav-link" onclick="navigateTo('home'); toggleMobileMenu()" data-tooltip="Página inicial" data-i18n="nav_home">Home</a>
+    <a class="nav-link" onclick="navigateTo('songs'); toggleMobileMenu()" data-tooltip="Ver todas as músicas" data-i18n="nav_songs">Músicas</a>
+    <a class="nav-link" onclick="navigateTo('about'); toggleMobileMenu()" data-tooltip="Sobre o projeto PROFEF" data-i18n="nav_about">Sobre</a>
+    <a class="nav-link" onclick="navigateTo('ranking'); toggleMobileMenu()" data-tooltip="Ranking das mais votadas" data-i18n="nav_ranking">Ranking</a>
+    <a class="nav-link" onclick="navigateTo('styles'); toggleMobileMenu()" data-tooltip="Músicas por género" data-i18n="nav_styles">Estilos</a>
+    <a class="nav-link" onclick="navigateTo('requests'); toggleMobileMenu()" data-tooltip="Pedir uma música" data-i18n="nav_requests">Pedidos</a>
+    <a class="nav-link" onclick="navigateTo('statistics'); toggleMobileMenu()" data-tooltip="Estatísticas do site" data-i18n="nav_statistics">Estatísticas</a>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SEARCH OVERLAY
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="search-overlay" id="searchOverlay">
+    <div class="search-container">
+      <div class="search-input-wrapper">
+        <input type="text" class="search-input" id="searchInput" placeholder="Pesquisar músicas..." oninput="performSearch(this.value)">
+        <button class="search-close" onclick="toggleSearch()" data-tooltip="Fechar pesquisa (ESC)">✕</button>
+      </div>
+      <div class="search-filters" id="searchFilters">
+        <button class="search-filter active" data-filter="all" onclick="setSearchFilter('all')" data-tooltip="Mostrar todas">Todos</button>
+        <button class="search-filter" data-filter="Pop" onclick="setSearchFilter('Pop')" data-tooltip="Género Pop">Pop</button>
+        <button class="search-filter" data-filter="Rock" onclick="setSearchFilter('Rock')" data-tooltip="Género Rock">Rock</button>
+        <button class="search-filter" data-filter="Ballad" onclick="setSearchFilter('Ballad')" data-tooltip="Género Balada">Balada</button>
+
+        <button class="search-filter" data-filter="Dance" onclick="setSearchFilter('Dance')" data-tooltip="Género Dance">Dance</button>
+
+        <button class="search-filter" data-filter="Indie" onclick="setSearchFilter('Indie')" data-tooltip="Género Indie">Indie</button>
+
+        <button class="search-filter" data-filter="Electronic" onclick="setSearchFilter('Electronic')" data-tooltip="Género Eletrónica">Eletrónica</button>
+      </div>
+      <div class="search-results" id="searchResults"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       CONFIRMATION MODAL
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="confirmModal">
+    <div class="modal">
+      <div class="modal-icon modal-checkmark">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <path d="M10 20L17 27L30 13" stroke="#0f0f10" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="stroke-dasharray:50; stroke-dashoffset:50; animation: checkmarkDraw 0.5s ease 0.4s forwards;"/>
+        </svg>
+      </div>
+      <h2 class="modal-title" data-i18n="modal_thanks">Obrigado por votares!</h2>
+      <p class="modal-text" data-i18n="modal_message">Até à próxima fase! Os teus votos foram registados com sucesso.</p>
+        <button class="btn btn-primary" onclick="closeModal()" data-tooltip="Fechar">OK</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       VOTING PANEL (fixed bottom bar)
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="voting-panel" id="votingPanel">
+    <div class="voting-panel-inner">
+      <div class="voting-choices" id="votingChoices">
+        <div class="voting-choice" id="choice1">
+          <span class="voting-choice-emoji">🥇</span>
+          <span data-i18n="vote_first">1ª Escolha</span>
+        </div>
+        <div class="voting-choice" id="choice2">
+          <span class="voting-choice-emoji">🥈</span>
+          <span data-i18n="vote_second">2ª Escolha</span>
+        </div>
+        <div class="voting-choice" id="choice3">
+          <span class="voting-choice-emoji">🥉</span>
+          <span data-i18n="vote_third">3ª Escolha</span>
+        </div>
+      </div>
+      <div class="voting-count">
+        <span data-i18n="vote_selected">Selecionaste</span>
+        <strong id="voteCount">0</strong> / 3
+      </div>
+      <button class="btn btn-primary btn-sm" id="submitVoteBtn" disabled onclick="submitVote()" data-i18n="vote_submit" data-tooltip="Submeter os teus 3 votos">Submeter Voto</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE: HOME
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page active" id="page-home">
+    <section class="hero">
+      <!-- Background -->
+      <div class="hero-bg">
+        <div class="hero-gradient hero-gradient-1"></div>
+        <div class="hero-gradient hero-gradient-2"></div>
+        <div class="hero-gradient hero-gradient-3"></div>
+        <div class="particles-container" id="particlesContainer"></div>
+      </div>
+
+      <!-- Content -->
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span>🎵</span>
+          <span data-i18n="hero_badge">EVERY SONG TELLS A STORY</span>
+        </div>
+
+        <h1 class="hero-title">
+          <span class="gold">PROFEF</span>
+        </h1>
+
+        <p class="hero-subtitle" data-i18n="hero_subtitle">MÚSICA CRIADA COM IA · LETRAS ORIGINAIS</p>
+
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-stat-number" id="heroSongCount"></div>
+            <div class="hero-stat-label" data-i18n="hero_songs">Músicas</div>
+          </div>
+          <div class="hero-stat-divider"></div>
+          <div class="hero-stat">
+            <div class="hero-stat-number">∞</div>
+            <div class="hero-stat-label" data-i18n="hero_stories">Histórias</div>
+          </div>
+          <div class="hero-stat-divider"></div>
+          <div class="hero-stat">
+            <div class="hero-stat-number">1</div>
+            <div class="hero-stat-label" data-i18n="hero_vision">Visão</div>
+          </div>
+        </div>
+
+        <div class="hero-cta">
+          <button class="btn btn-primary" onclick="navigateTo('songs')" data-i18n="hero_cta" data-tooltip="Ver catálogo completo de músicas">
+            Explorar Músicas →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Preview -->
+    <section class="section">
+      <div class="about-preview">
+        <div class="about-preview-content">
+          <div class="section-badge" data-i18n="about_badge">SOBRE O PROJETO</div>
+          <h2 class="section-title" style="text-align:left;white-space:nowrap;" data-i18n="about_title">Criatividade Humana + IA</h2>
+          <p class="about-preview-text" data-i18n="about_preview_1">
+            PROFEF é um projeto musical que une criatividade humana e Inteligência Artificial para dar vida a canções originais. Cada música começa muito antes da melodia — tudo nasce de uma ideia, de uma emoção, de uma memória, de uma viagem ou de um lugar especial.
+          </p>
+          <p class="about-preview-text" data-i18n="about_preview_2">
+            As letras são totalmente originais, escritas para contar histórias e criar ligações com quem ouve. A produção musical recorre ao potencial da IA como ferramenta criativa, sem nunca abdicar da originalidade.
+          </p>
+          <button class="btn btn-secondary btn-sm" onclick="navigateTo('about')" style="margin-top:1.5rem;" data-tooltip="Ler biografia completa" data-i18n="about_more">
+            Saber Mais →
+          </button>
+        </div>
+        <div class="about-preview-visual">
+          <div class="about-preview-card">
+            <div class="about-preview-icon">🎶</div>
+            <div class="about-preview-label">Folk · Pop · Rock</div>
+          </div>
+          <div class="about-preview-card">
+            <div class="about-preview-icon">✍️</div>
+            <div class="about-preview-label">Letras Originais</div>
+          </div>
+          <div class="about-preview-card">
+            <div class="about-preview-icon">🤖</div>
+            <div class="about-preview-label">Produção com IA</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Song of the Day -->
+    <section class="section">
+      <div id="songOfTheDay"></div>
+    </section>
+
+    <!-- Featured Songs Preview -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-badge" data-i18n="songs_badge">MÚSICAS</div>
+        <h2 class="section-title" data-i18n="featured_title">Últimos Lançamentos</h2>
+        <p class="section-description" data-i18n="featured_desc">Explora o catálogo completo de músicas originais.</p>
+      </div>
+      <div class="songs-grid" id="featuredSongsGrid"></div>
+      <div class="text-center mt-4">
+        <button class="btn btn-secondary" onclick="navigateTo('songs')" data-tooltip="Ver todas as músicas" data-i18n="featured_all">Ver Todas as Músicas →</button>
+      </div>
+    </section>
+
+    <!-- Recently Viewed Section -->
+    <section class="section" id="recentSection" style="display:none;">
+      <div class="section-header">
+        <div class="section-badge" data-i18n="recent_badge">VISTOS RECENTEMENTE</div>
+        <h2 class="section-title" data-i18n="recent_title">Ouviste Recentemente</h2>
+      </div>
+      <div class="recently-viewed-scroll" id="recentScroll"></div>
+    </section>
+
+    <!-- Cover Gallery -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-badge" data-i18n="gallery_badge">GALERIA</div>
+        <h2 class="section-title" data-i18n="gallery_title">Capas dos Álbuns</h2>
+      </div>
+      <div class="cover-gallery">
+        <div class="cover-gallery-track" id="coverGalleryTrack"></div>
+      </div>
+    </section>
+
+    <!-- Quotes Section -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-badge" data-i18n="quotes_badge">CITAÇÕES</div>
+        <h2 class="section-title" data-i18n="quotes_title">Palavras que Inspiram</h2>
+      </div>
+      <div class="quotes-grid" id="quotesGrid"></div>
+    </section>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE: SONGS — Portfolio de Músicas
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page-songs">
+    <div class="section" style="padding-top: 100px;">
+      <div class="section-header">
+        <div class="section-badge" data-i18n="songs_badge">CATÁLOGO</div>
+        <h2 class="section-title" data-i18n="songs_title">Todas as Músicas</h2>
+        <p class="section-description" data-i18n="songs_desc">Músicas originais. Cada uma conta uma história diferente.</p>
+      </div>
+
+      <div class="songs-grid" id="allSongsGrid"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE: ABOUT — Sobre o Projeto + Biografia
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page-about">
+    <div class="section" style="padding-top: 100px;">
+      <!-- About Section -->
+      <div class="about-section">
+        <div class="section-badge" data-i18n="about_badge">SOBRE O PROJETO</div>
+        <h2 class="section-title">PROFEF</h2>
+        
+        <div class="about-content">
+          <div class="about-text">
+            <p data-i18n="about_pt_1">
+              PROFEF é um projeto musical que une criatividade humana e Inteligência Artificial para dar vida a canções originais.
+            </p>
+            <p data-i18n="about_pt_2">
+              Cada música começa muito antes da melodia. Tudo nasce de uma ideia, de uma emoção, de uma memória, de uma viagem ou de um lugar especial. A partir daí, são escritas letras 100% originais, criadas para contar histórias, transmitir emoções e criar uma ligação genuína com quem as ouve.
+            </p>
+            <p data-i18n="about_pt_3">
+              A produção musical é desenvolvida com o apoio da Inteligência Artificial, utilizada como uma ferramenta criativa para transformar essas histórias em música. A IA não substitui a criatividade humana; é um instrumento que permite explorar novos estilos, sonoridades e possibilidades musicais.
+            </p>
+            <p data-i18n="about_pt_4">
+              O projeto percorre diversos géneros, como folk, pop, country, rock alternativo, música latina, Soul / Blues e baladas cinematográficas, mantendo sempre a mesma identidade: cada música conta uma história.
+            </p>
+            <p data-i18n="about_pt_5">
+              Mais do que criar canções, o PROFEF pretende proporcionar experiências, levando o ouvinte a viajar por lugares reais e imaginários, reviver memórias e descobrir novas emoções através da música.
+            </p>
+            <p data-i18n="about_pt_6">
+              Este é um projeto que demonstra como a criatividade humana e a tecnologia podem trabalhar em conjunto para criar algo verdadeiramente único.
+            </p>
+            <p class="about-quote" data-i18n="about_pt_quote">
+              "Todas as grandes histórias merecem uma banda sonora." 🎵
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Artist Section -->
+      <div class="about-section" style="margin-top:4rem;">
+        <div class="section-badge" data-i18n="artist_badge">O ARTISTA</div>
+        <h2 class="section-title">PROFEF</h2>
+        
+        <div class="about-content">
+          <div class="about-text">
+            <p data-i18n="artist_pt_1">
+              A música sempre foi mais do que uma paixão para o PROFEF — é uma forma de contar histórias, despertar emoções e transformar memórias em canções.
+            </p>
+            <p data-i18n="artist_pt_2">
+              Cada música nasce de uma ideia, de um lugar, de uma viagem ou de um momento marcante. Dos fiordes da Islândia às ruas de Itália, das aventuras de Interrail aos campos infinitos cobertos de flores, cada composição convida o ouvinte a embarcar numa viagem única, onde a imaginação e a realidade se cruzam.
+            </p>
+            <p data-i18n="artist_pt_3">
+              As letras são totalmente originais, escritas para transmitir emoções, contar histórias e criar ligações com quem as ouve. A produção musical recorre ao potencial da Inteligência Artificial como ferramenta criativa, explorando novas sonoridades e possibilidades musicais, sem nunca abdicar da originalidade das ideias e das narrativas.
+            </p>
+            <p data-i18n="artist_pt_4">
+              Sem se prender a um único género musical, o PROFEF explora sonoridades que vão do folk ao pop, do country ao rock alternativo, passando por Soul / Blues, baladas cinematográficas e melodias inspiradoras. O elemento comum é sempre o mesmo: histórias que merecem ser ouvidas.
+            </p>
+            <p data-i18n="artist_pt_5">
+              Cada lançamento procura criar uma experiência diferente, com letras originais, capas cuidadosamente concebidas e uma identidade própria que valoriza a emoção acima de tudo.
+            </p>
+            <p data-i18n="artist_pt_6">
+              PROFEF acredita que a tecnologia pode ser uma aliada da criatividade. Quando a imaginação humana e a Inteligência Artificial trabalham em conjunto, é possível dar vida a músicas únicas que inspiram, emocionam e ficam na memória.
+            </p>
+            <p data-i18n="artist_pt_7">
+              Porque, para PROFEF, uma boa música não é apenas aquela que se ouve... é aquela que fica connosco muito depois de terminar.
+            </p>
+            <p class="about-quote">
+              "Every song tells a story." 🎵
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE: RANKING (Voto + Ranking)
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page-ranking">
+    <div class="section" style="padding-top: 100px;">
+      <div class="section-header">
+        <div class="section-badge" data-i18n="ranking_badge">RANKING</div>
+        <h2 class="section-title" data-i18n="ranking_title">Votação + Ranking</h2>
+        <p class="section-description" data-i18n="ranking_desc">Escolhe as tuas 3 músicas favoritas de todas. O ranking é atualizado em tempo real.</p>
+      </div>
+
+      <!-- Instruções do Concurso -->
+      <div id="rankingContestRules"></div>
+
+      <!-- Podium (top 3) -->
+      <div class="hall-of-fame-podium" id="rankingPodium"></div>
+
+      <!-- Full Ranking -->
+      <div class="ranking-list" id="rankingList"></div>
+
+      <!-- Votável: todas as músicas para votar -->
+      <div id="rankingVoteSection"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE: SONG DETAIL
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page-song">
+    <div class="song-detail">
+      <div class="song-detail-hero" id="songDetailHero">
+        <!-- Preenchido dinamicamente -->
+      </div>
+      <div id="songDetailLyrics"></div>
+      <div id="songDetailBehind"></div>
+      <div id="songDetailComments"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE: STATISTICS
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page-statistics">
+    <div class="section" style="padding-top: 100px;">
+      <div class="section-header">
+        <div class="section-badge" data-i18n="stats_badge">ESTATÍSTICAS</div>
+        <h2 class="section-title" data-i18n="stats_title">Estatísticas</h2>
+        <p class="section-description" data-i18n="stats_desc">Dados gerais de todas as músicas e votos.</p>
+      </div>
+
+      <div class="stats-grid" id="statsGrid"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE: PRIVACY POLICY
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page-privacy">
+    <div class="section" style="padding-top:100px;">
+      <div class="container" style="max-width:720px;">
+        <div class="section-header" style="text-align:center;">
+          <div class="section-badge">🛡️</div>
+          <h2 class="section-title" data-i18n="privacy_title">Política de Privacidade</h2>
+          <p class="section-description" data-i18n="privacy_last_updated">Última atualização: Julho 2026</p>
+        </div>
+        <div class="privacy-content" id="privacyContent"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE: 404
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page-404">
+    <div class="section" style="padding-top:100px;text-align:center;">
+      <div class="container">
+        <div style="font-size:5rem;margin-bottom:1rem;">🔍</div>
+        <h2 class="section-title" data-i18n="error_404_title">Página não encontrada</h2>
+        <p class="section-description" data-i18n="error_404_desc">O que procuras não existe. Talvez tenha mudado de endereço.</p>
+        <a href="#home" class="btn btn-primary" style="margin-top:1.5rem;" data-i18n="error_404_home">Voltar ao Início</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE: STYLES
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page-styles">
+    <div class="container" style="padding-top:2rem;">
+      <div class="section-header" style="text-align:center;">
+        <div class="section-badge" data-i18n="styles_badge">ESTILOS</div>
+        <h2 class="section-title" data-i18n="styles_title">Músicas por Género</h2>
+        <p class="section-description" style="margin-left:auto;margin-right:auto;" data-i18n="styles_desc">Explora o catálogo por estilo musical. Cada género conta uma história diferente.</p>
+      </div>
+      <div class="styles-grid" id="stylesGridView"></div>
+    </div>
+    <div class="container" id="styleDetailView" style="display:none;padding-top:2rem;">
+      <button class="btn btn-ghost btn-sm" onclick="backToStylesGrid()" style="margin-bottom:1rem;">← <span data-i18n="back">Voltar</span></button>
+      <h2 id="styleDetailTitle" class="section-title" style="text-align:center;margin-bottom:0.5rem;"></h2>
+      <p id="styleDetailCount" class="section-description" style="text-align:center;margin:0 auto 1.5rem;"></p>
+      <div id="styleDetailSongs"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE: REQUESTS
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page-requests">
+    <div class="container" style="padding-top:2rem;text-align:center;">
+      <div class="section-badge" data-i18n="requests_badge">PEDIDOS</div>
+      <h2 class="section-title" data-i18n="requests_title">Pede uma Música</h2>
+      <p class="section-description" style="margin-left:auto;margin-right:auto;" data-i18n="requests_desc">Tem uma ideia para uma música? Partilha connosco o teu tema e nós criamos uma canção especialmente para ti.</p>
+
+      <div id="requestFormContainer" style="max-width:600px;margin:2rem auto;">
+        <form id="requestForm" onsubmit="submitSongRequest(event)">
+          <div class="form-group">
+            <label class="form-label" data-i18n="req_name_label">O teu nome</label>
+            <input type="text" id="reqName" class="form-input" placeholder="Ex: Maria" required maxlength="50">
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="req_title_label">Título da música</label>
+            <input type="text" id="reqSongTitle" class="form-input" placeholder="Ex: Sonhos do Mar" required maxlength="100">
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="req_theme_label">Tema / Ideia da letra</label>
+            <textarea id="reqTheme" class="form-input form-textarea" rows="4" placeholder="Descreve o tema, a história ou a emoção que queres que a música transmita..." required maxlength="500"></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group" style="flex:1;">
+              <label class="form-label" data-i18n="req_style_label">Estilo musical</label>
+              <select id="reqStyle" class="form-input">
+                <option value="">--</option>
+                <option value="Pop">Pop</option>
+                <option value="Rock">Rock</option>
+                <option value="Ballad">Ballad</option>
+                <option value="Folk">Folk</option>
+                <option value="Country">Country</option>
+                <option value="Reggae">Reggae</option>
+                <option value="Soul">Soul</option>
+                <option value="Indie">Indie</option>
+                <option value="Epic">Epic</option>
+                <option value="Metal">Metal</option>
+                <option value="Dance">Dance</option>
+                <option value="Surf">Surf</option>
+                <option value="Funk">Funk</option>
+                <option value="Romantic">Romantic</option>
+              </select>
+            </div>
+            <div class="form-group" style="flex:1;">
+              <label class="form-label" data-i18n="req_mood_label">Emoção / Mood</label>
+              <select id="reqMood" class="form-input">
+                <option value="">--</option>
+                <option value="Energetic">Energetic</option>
+                <option value="Calm">Calm</option>
+                <option value="Emotional">Emotional</option>
+                <option value="Joyful">Joyful</option>
+                <option value="Romantic">Romantic</option>
+                <option value="Nostalgic">Nostalgic</option>
+                <option value="Intense">Intense</option>
+                <option value="Freedom">Freedom</option>
+                <option value="Reflective">Reflective</option>
+                <option value="Epic">Epic</option>
+                <option value="Dreamy">Dreamy</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="req_email_label">Email (opcional)</label>
+            <input type="email" id="reqEmail" class="form-input" placeholder="Para te notificarmos quando a música estiver pronta" maxlength="100">
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;margin-top:0.5rem;" data-i18n="req_submit">Enviar Pedido</button>
+        </form>
+      </div>
+
+      <div id="requestSuccess" style="display:none;max-width:600px;margin:2rem auto;text-align:center;padding:3rem 1rem;">
+        <div style="font-size:3rem;margin-bottom:1rem;">🎵</div>
+        <h3 style="color:var(--gold);margin-bottom:0.5rem;" data-i18n="req_success_title">Pedido enviado!</h3>
+        <p style="color:var(--text-dim);" data-i18n="req_success_text">Obrigado! O teu pedido foi registado. Quando a música estiver pronta, ela aparecerá numa secção separada do catálogo.</p>
+        <button class="btn btn-secondary" style="margin-top:1rem;" onclick="resetRequestForm()" data-i18n="req_another">Enviar outro pedido</button>
+      </div>
+
+      <!-- Public list of completed requests -->
+      <div id="completedRequestsContainer" style="max-width:800px;margin:3rem auto;"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       NEWSLETTER
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="newsletter-section" id="newsletter">
+    <div class="section" style="padding-top:0;">
+      <div class="newsletter-container">
+        <div class="newsletter-content">
+          <h2 class="newsletter-title">📩 Newsletter</h2>
+          <p class="newsletter-text">Recebe novidades, novos lançamentos e conteúdos exclusivos diretamente no teu email.</p>
+        </div>
+        <form class="newsletter-form" onsubmit="subscribeNewsletter(event)">
+          <input type="email" id="newsletterEmail" class="newsletter-input" placeholder="O teu email..." required>
+          <button type="submit" class="btn btn-primary btn-sm" id="newsletterBtn">Subscrever</button>
+        </form>
+        <p class="newsletter-success" id="newsletterSuccess" style="display:none;">✅ Subscrito com sucesso!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════════════════ -->
+  <footer class="footer">
+    <p class="footer-text">
+      <span class="gold">PROFEF</span> © 2026 — Feito com paixão pela música
+    </p>
+    <div class="footer-links">
+      <a href="#privacy" class="footer-link" data-i18n="footer_privacy">Política de Privacidade</a>
+    </div>
+    <div class="footer-social">
+      <a href="https://www.youtube.com/@Profef77_IA" target="_blank" class="footer-social-link" aria-label="YouTube" data-tooltip="YouTube">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        YouTube
+      </a>
+      <a href="https://www.facebook.com/profile.php?id=61590383709252" target="_blank" class="footer-social-link" aria-label="Facebook" data-tooltip="Facebook">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        Facebook
+      </a>
+      <a href="#admin" class="footer-social-link" aria-label="Admin" data-tooltip="Painel Administrativo">
+        🔐 Admin
+      </a>
+    </div>
+  </footer>
+
+  <!-- Subscriber Modal -->
+  <div class="modal-overlay" id="subscriberModal">
+    <div class="modal-content" style="max-width:420px;">
+      <button class="modal-close" onclick="closeSubscriberModal()">✕</button>
+
+      <!-- Login View -->
+      <div id="subLoginView">
+        <h3 class="modal-title" data-i18n="sub_login_title">Entrar</h3>
+        <p class="modal-text" data-i18n="sub_login_text">Entra para teres acesso a funcionalidades exclusivas.</p>
+        <div class="form-group">
+          <label class="form-label" data-i18n="sub_email_label">Email</label>
+          <input type="email" id="subLoginEmail" class="form-input" placeholder="teu@email.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="sub_password_label">Palavra-passe</label>
+          <input type="password" id="subLoginPassword" class="form-input" placeholder="••••••••" required>
+        </div>
+        <div id="subLoginError" style="color:#e74c3c;font-size:0.85rem;margin-bottom:0.5rem;display:none;"></div>
+        <button class="btn btn-primary" style="width:100%;" onclick="subscriberLogin()" data-i18n="sub_login_btn">Entrar</button>
+        <p style="text-align:center;margin-top:1rem;font-size:0.85rem;color:var(--text-dim);">
+          <span data-i18n="sub_no_account">Ainda não tens conta?</span>
+          <a href="#" onclick="showSubView('register')" style="color:var(--gold);text-decoration:none;font-weight:600;" data-i18n="sub_register_link">Registar</a>
+        </p>
+      </div>
+
+      <!-- Register View -->
+      <div id="subRegisterView" style="display:none;">
+        <h3 class="modal-title" data-i18n="sub_register_title">Tornar-te Subscritor</h3>
+        <p class="modal-text" data-i18n="sub_register_text">Regista-te para votares, pedires músicas e guardares favoritos.</p>
+        <div class="form-group">
+          <label class="form-label" data-i18n="sub_name_label">Nome</label>
+          <input type="text" id="subRegName" class="form-input" placeholder="O teu nome" required maxlength="50">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="sub_email_label">Email</label>
+          <input type="email" id="subRegEmail" class="form-input" placeholder="teu@email.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="sub_password_label">Palavra-passe</label>
+          <input type="password" id="subRegPassword" class="form-input" placeholder="Mínimo 6 caracteres" required minlength="6">
+        </div>
+        <div id="subRegError" style="color:#e74c3c;font-size:0.85rem;margin-bottom:0.5rem;display:none;"></div>
+        <button class="btn btn-primary" style="width:100%;" onclick="subscriberRegister()" data-i18n="sub_register_btn">Registar</button>
+        <p style="text-align:center;margin-top:1rem;font-size:0.85rem;color:var(--text-dim);">
+          <span data-i18n="sub_has_account">Já tens conta?</span>
+          <a href="#" onclick="showSubView('login')" style="color:var(--gold);text-decoration:none;font-weight:600;" data-i18n="sub_login_link">Entrar</a>
+        </p>
+      </div>
+
+      <!-- Profile View (logged in) -->
+      <div id="subProfileView" style="display:none;">
+        <div style="text-align:center;margin-bottom:1.5rem;">
+          <div id="subProfileAvatar" style="width:60px;height:60px;border-radius:50%;background:var(--gold);color:#1b1b1d;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;margin:0 auto 0.75rem;"></div>
+          <h3 id="subProfileName" style="margin:0;"></h3>
+          <p id="subProfileEmail" style="color:var(--text-dim);font-size:0.85rem;margin:0.25rem 0 0;"></p>
+          <div id="subProfileBadge" style="display:inline-block;margin-top:0.5rem;padding:0.25rem 0.75rem;background:rgba(212,175,55,0.15);border:1px solid rgba(212,175,55,0.3);border-radius:50px;color:#D4AF37;font-size:0.7rem;font-weight:600;letter-spacing:1px;">⭐ SUBSCRITOR</div>
+        </div>
+        <div id="subProfileStats" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem;margin-bottom:1.5rem;"></div>
+        <div style="display:flex;gap:0.5rem;">
+          <button class="btn btn-ghost btn-sm" style="flex:1;" onclick="showSubView('edit')" data-i18n="sub_edit_btn">✏️ Editar</button>
+          <button class="btn btn-ghost btn-sm" style="flex:1;" onclick="subscriberLogout()" data-i18n="sub_logout_btn">Sair da conta</button>
+        </div>
+      </div>
+
+      <!-- Edit Profile View -->
+      <div id="subEditView" style="display:none;">
+        <h3 class="modal-title" data-i18n="sub_edit_title">Editar Perfil</h3>
+        <div class="form-group">
+          <label class="form-label" data-i18n="sub_name_label">Nome</label>
+          <input type="text" id="subEditName" class="form-input" maxlength="50">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="sub_email_label">Email</label>
+          <input type="email" id="subEditEmail" class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="sub_edit_new_password">Nova palavra-passe</label>
+          <input type="password" id="subEditPassword" class="form-input" placeholder="••••••••" minlength="6">
+        </div>
+        <div id="subEditError" style="color:#e74c3c;font-size:0.85rem;margin-bottom:0.5rem;display:none;"></div>
+        <button class="btn btn-primary" style="width:100%;margin-bottom:0.75rem;" onclick="subscriberUpdateProfile()" data-i18n="sub_edit_save">Guardar</button>
+        <button class="btn btn-ghost btn-sm" style="width:100%;color:#dc2626;" onclick="confirmDeleteAccount()" data-i18n="sub_edit_delete_account">Eliminar conta</button>
+        <button class="btn btn-ghost btn-sm" style="width:100%;margin-top:0.5rem;" onclick="showSubView('profile')" data-i18n="sub_edit_cancel">← Voltar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Back to Top Button -->
+  <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Voltar ao topo" data-tooltip="Voltar ao topo">↑</button>
+
+  <!-- Cookie Consent Banner -->
+  <div class="cookie-consent" id="cookieConsent">
+    <p data-i18n="cookie_text">Este site utiliza cookies para melhorar a experiência. Ao continuares, concordas com a nossa <a href="#privacy" style="color:var(--gold);text-decoration:underline;">Política de Privacidade</a>.</p>
+    <div class="cookie-actions">
+      <button class="btn btn-primary btn-sm" onclick="acceptCookies()" data-i18n="cookie_accept">Aceitar</button>
+      <button class="btn btn-ghost btn-sm" onclick="declineCookies()" data-i18n="cookie_decline">Recusar</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SCRIPTS
+       ═══════════════════════════════════════════════════════════ -->
+  <script src="songs.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
